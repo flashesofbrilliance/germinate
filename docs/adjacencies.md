@@ -58,6 +58,29 @@
    cadence" is the north-star cadence signal applied to design output. Seventh
    boundary alongside cross-time/-session/-branch/-context/-environment/-agent.
 
+## Capstone: public ledger + private rosetta stone
+
+The belief-log is designed to be **published indelibly** (append-only, hash-chainable,
+git-pushed — "the diamond reaching the cloud") *precisely because meaning is separable
+from structure*:
+
+- The **public ledger** carries the trace elements — structure, timestamps, `trigger`,
+  `confidence`/`risk`, and **opaque `evidence[]` handles** (`ticket-1234`, `gdoc:ID`,
+  `ci:run-4123`, a content hash). It proves *that* a belief formed, *when*, and *what
+  moved it* — without exposing the substance.
+- The **private rosetta stone** — a git-ignored, per-tenant map (e.g. `rosetta.json`,
+  or a keyring) — resolves those handles to the actual sensitive content. Holders read
+  the full story; everyone else sees a verifiable, tamper-evident skeleton.
+
+This is the mechanism, not a bolt-on: `evidence[]` is *built* to hold opaque references,
+not inline content. It unifies **redaction-by-reference** (what makes hash-chaining safe
+to publish), the **airgap/client seam** (public *method*, private *priors/rosetta*), and
+the Observatory `--attribution hide` / strip-to-subject pattern generalized.
+
+**Guardrail:** never inline secrets into belief text. *Publish the trace; keep the
+rosetta private.* A future `belief append` lint (roadmap) should warn on likely-secret
+inline content and nudge toward an `evidence[]` handle.
+
 ## Roadmap — future verbs (extend the core, stay dependency-light)
 
 - **`drift-check --age` / staleness-distance.** Every surface carries a dated docset;
