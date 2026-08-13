@@ -1,5 +1,5 @@
 'use strict';
-// handoff-ledger CLI. Thin arg-parsing over the core modules. Every verb supports --json.
+// germinate CLI. Thin arg-parsing over the core modules. Every verb supports --json.
 
 const fs = require('fs');
 const path = require('path');
@@ -29,10 +29,10 @@ function out(json, human, asJson) {
   else process.stdout.write(human + '\n');
 }
 
-const HELP = `handoff-ledger v${VERSION} — a serializable, provenance-carrying handoff protocol.
+const HELP = `germinate v${VERSION} — a serializable, provenance-carrying handoff protocol.
 
 USAGE
-  handoff-ledger <command> [options]
+  germinate <command> [options]
 
 COMMANDS
   belief validate <log.jsonl>              Validate a belief-log (per line + append-only order).
@@ -179,25 +179,25 @@ function cmdInit(args) {
   if (!fs.existsSync(belieflogPath) || f.force) {
     belieflog.append(belieflogPath, {
       trace, span: '_meta', kind: 'trace.open',
-      note: 'Belief log initialized by `handoff-ledger init`. Append-only, OTel-shaped. One belief lifetime per span; correct with belief.update/close, never by editing prior lines.',
+      note: 'Belief log initialized by `germinate init`. Append-only, OTel-shaped. One belief lifetime per span; correct with belief.update/close, never by editing prior lines.',
     });
     wrote.push(belieflogPath);
   }
-  const cfgPath = '.handoff-ledger.json';
+  const cfgPath = '.germinate.json';
   if (!fs.existsSync(cfgPath) || f.force) {
     fs.writeFileSync(cfgPath, JSON.stringify({ manifest: manifestPath, belieflog: belieflogPath, docsetVersion: docset }, null, 2) + '\n');
     wrote.push(cfgPath);
   }
 
-  const prompt = `You are starting a fresh project primed by handoff-ledger.\n\n` +
+  const prompt = `You are starting a fresh project primed by germinate.\n\n` +
     `Substrate in place:\n` +
     `  - manifest: ${manifestPath} (register every surface here; canonical=git-tracked SSOT, projection=advisory)\n` +
     `  - belief-log: ${belieflogPath} (append understanding as it forms — belief.open/update with confidence+risk+evidence)\n` +
     `  - config: ${cfgPath}\n\n` +
     `Discipline from turn one:\n` +
-    `  1. Record beliefs as they form (not just conclusions): handoff-ledger belief append ${belieflogPath} --kind belief.open --trace ${trace} --span <thread> --belief "…" --confidence <0..1> --risk <0..1>\n` +
-    `  2. Register new surfaces in ${manifestPath}; run \`handoff-ledger drift-check\` before trusting any projection.\n` +
-    `  3. At session end: \`handoff-ledger compact --out SESSION-HANDOFF.md\`.\n` +
+    `  1. Record beliefs as they form (not just conclusions): germinate belief append ${belieflogPath} --kind belief.open --trace ${trace} --span <thread> --belief "…" --confidence <0..1> --risk <0..1>\n` +
+    `  2. Register new surfaces in ${manifestPath}; run \`germinate drift-check\` before trusting any projection.\n` +
+    `  3. At session end: \`germinate compact --out SESSION-HANDOFF.md\`.\n` +
     `Set docset '${docset}' to a real YYYY-MM-DD-<phase>.<n> on first real change.\n`;
 
   if (f.json) { out({ wrote, prompt }, '', true); return 0; }
@@ -211,7 +211,7 @@ function cmdInstallHooks(args) {
   const top = git(['rev-parse', '--show-toplevel'], process.cwd());
   if (!top) throw new Error('not inside a git repository');
   const hookPath = path.join(top, '.git', 'hooks', 'pre-push');
-  const hook = `#!/bin/sh\n# installed by handoff-ledger — serializability guard\nexec handoff-ledger serializability --strict\n`;
+  const hook = `#!/bin/sh\n# installed by germinate — serializability guard\nexec germinate serializability --strict\n`;
   fs.writeFileSync(hookPath, hook, { mode: 0o755 });
   out({ installed: hookPath }, `installed pre-push hook: ${hookPath}`, args.flags.json);
   return 0;

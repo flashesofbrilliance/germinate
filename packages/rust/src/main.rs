@@ -1,6 +1,6 @@
-//! handoff-ledger CLI (Rust). Verbs: belief validate, drift-check, docset-cmp, version, help.
-use handoff_ledger as core;
-use handoff_ledger::json;
+//! germinate CLI (Rust). Verbs: belief validate, drift-check, docset-cmp, version, help.
+use germinate as core;
+use germinate::json;
 use std::path::Path;
 use std::process::exit;
 
@@ -8,7 +8,7 @@ const VERSION: &str = "0.1.0";
 
 fn help() {
     println!(
-        "handoff-ledger v{VERSION} (rust)\n\nUSAGE\n  handoff-ledger <command>\n\nCOMMANDS\n  belief validate <log.jsonl>          Validate a belief-log.\n  drift-check --manifest <m.json>      Are projections in sync with the docset?\n  docset-cmp <a> <b>                    Compare two docset versions (-1/0/1).\n  version | help"
+        "germinate v{VERSION} (rust)\n\nUSAGE\n  germinate <command>\n\nCOMMANDS\n  belief validate <log.jsonl>          Validate a belief-log.\n  drift-check --manifest <m.json>      Are projections in sync with the docset?\n  docset-cmp <a> <b>                    Compare two docset versions (-1/0/1).\n  version | help"
     );
 }
 

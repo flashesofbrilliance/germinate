@@ -1,4 +1,4 @@
-"""handoff-ledger Python CLI. `python -m handoff_ledger <cmd>` or the `handoff-ledger-py` entry point."""
+"""germinate Python CLI. `python -m germinate <cmd>` or the `germinate-py` entry point."""
 import argparse
 import json
 import os
@@ -17,7 +17,7 @@ def _out(obj, human, as_json):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
-    p = argparse.ArgumentParser(prog="handoff-ledger", add_help=True)
+    p = argparse.ArgumentParser(prog="germinate", add_help=True)
     p.add_argument("--json", action="store_true")
     sub = p.add_subparsers(dest="cmd")
 

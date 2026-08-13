@@ -1,5 +1,5 @@
 //! Conformance suite driven by ../../../conformance/cases.json. Zero-dep (uses the crate's own json parser).
-use handoff_ledger::{compare_docset, drift_check, validate_file};
+use germinate::{compare_docset, drift_check, validate_file};
 use std::path::Path;
 
 fn conf_dir() -> std::path::PathBuf {
@@ -10,8 +10,8 @@ fn read(p: &str) -> String {
     std::fs::read_to_string(conf_dir().join(p)).unwrap()
 }
 
-fn cases() -> handoff_ledger::json::Value {
-    handoff_ledger::json::parse(&read("cases.json")).unwrap()
+fn cases() -> germinate::json::Value {
+    germinate::json::parse(&read("cases.json")).unwrap()
 }
 
 #[test]
@@ -19,7 +19,7 @@ fn belief_line_validation() {
     let c = cases();
     for case in c.get("beliefLogLineValidation").unwrap().as_arr().unwrap() {
         let file = case.get("file").unwrap().as_str().unwrap();
-        let want = matches!(case.get("valid"), Some(handoff_ledger::json::Value::Bool(true)));
+        let want = matches!(case.get("valid"), Some(germinate::json::Value::Bool(true)));
         let (ok, _) = validate_file(&read(file));
         assert_eq!(ok, want, "{}", file);
     }
@@ -41,11 +41,11 @@ fn drift() {
     let c = cases();
     for case in c.get("driftCheck").unwrap().as_arr().unwrap() {
         let mpath = case.get("manifest").unwrap().as_str().unwrap();
-        let manifest = handoff_ledger::json::parse(&read(mpath)).unwrap();
+        let manifest = germinate::json::parse(&read(mpath)).unwrap();
         let (verdicts, ok) = drift_check(&manifest, &conf_dir()).unwrap();
-        let want_ok = matches!(case.get("expectExitZero"), Some(handoff_ledger::json::Value::Bool(true)));
+        let want_ok = matches!(case.get("expectExitZero"), Some(germinate::json::Value::Bool(true)));
         assert_eq!(ok, want_ok, "{}", mpath);
-        if let Some(handoff_ledger::json::Value::Obj(vs)) = case.get("verdicts") {
+        if let Some(germinate::json::Value::Obj(vs)) = case.get("verdicts") {
             for (id, v) in vs {
                 let got = verdicts.iter().find(|(i, _)| i == id).map(|(_, x)| x.as_str()).unwrap();
                 assert_eq!(got, v.as_str().unwrap(), "{} surface {}", mpath, id);

@@ -105,7 +105,7 @@ function pickupPrompt(assembled) {
   if (frontMatter.tail.lastCommit) lineage.push(`last commit ${frontMatter.tail.lastCommit}`);
   if (frontMatter.tail.belieflog) lineage.push(`belief-log at ${frontMatter.tail.belieflog}`);
   if (lineage.length) p += `\nLineage: ${lineage.join('; ')}`;
-  p += `\nRead the manifest and run \`handoff-ledger drift-check\` before making changes.\n`;
+  p += `\nRead the manifest and run \`germinate drift-check\` before making changes.\n`;
   return p;
 }
 

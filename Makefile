@@ -1,4 +1,4 @@
-# handoff-ledger — run the conformance suite across every implementation.
+# germinate — run the conformance suite across every implementation.
 .PHONY: test test-node test-shell test-python test-rust build-rust clean
 
 test: test-node test-shell test-python test-rust
@@ -22,7 +22,7 @@ test-rust:
 
 build-rust:
 	@cd packages/rust && cargo build --release
-	@echo "binary: packages/rust/target/release/handoff-ledger"
+	@echo "binary: packages/rust/target/release/germinate"
 
 clean:
 	@rm -rf packages/rust/target packages/node/node_modules

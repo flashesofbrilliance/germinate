@@ -43,5 +43,5 @@ jobs:
       # Validate the conformance manifests parse + the belief-log fixtures validate.
       - name: validate fixtures
         run: |
-          node packages/node/bin/handoff-ledger.js belief validate conformance/belief-log/valid/belief-open.jsonl
-          node packages/node/bin/handoff-ledger.js drift-check --manifest conformance/manifest/all-in-sync.json
+          node packages/node/bin/germinate.js belief validate conformance/belief-log/valid/belief-open.jsonl
+          node packages/node/bin/germinate.js drift-check --manifest conformance/manifest/all-in-sync.json

@@ -1,4 +1,4 @@
-//! handoff-ledger core (Rust). Zero-dependency. Conformant against ../../conformance/cases.json.
+//! germinate core (Rust). Zero-dependency. Conformant against ../../conformance/cases.json.
 pub mod json;
 
 use json::Value;

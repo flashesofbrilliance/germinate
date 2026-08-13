@@ -1,6 +1,6 @@
 # Integration guide — pass-throughs, install tiers, and the SDK surface
 
-This is the single source of truth for **every way to reach handoff-ledger**. The
+This is the single source of truth for **every way to reach germinate**. The
 design goal: one stable contract, exposed four ways (CLI, library, JSON, optional
 MCP), documented in one table so the surface can't rot.
 
@@ -8,7 +8,7 @@ MCP), documented in one table so the surface can't rot.
 
 ## 1. The core is not a service
 
-handoff-ledger is a **CLI + file-format + library**. There is deliberately **no
+germinate is a **CLI + file-format + library**. There is deliberately **no
 hosted service, no Vercel config, no Supabase script** in the core — adding a server
 would be the *most* invasive option, not the least. The value is local-first and
 git-native. A hosted microservice is an *optional adapter* (§4), infra-agnostic,
@@ -20,7 +20,7 @@ that wraps the same functions.
 
 | Tier | Command | Lives in | Benefit | Invasiveness |
 |---|---|---|---|---|
-| **1. Local hook** | `handoff-ledger install-hooks` | `.git/hooks/pre-push` | serializability guard fires at the one moment it matters | **lowest** — one command, nothing hosted |
+| **1. Local hook** | `germinate install-hooks` | `.git/hooks/pre-push` | serializability guard fires at the one moment it matters | **lowest** — one command, nothing hosted |
 | **2. Team CI gate** | add the composite action | `.github/workflows/*.yml` | `drift-check --strict` on every PR — drift becomes a *team* gate | low — a few lines of YAML |
 | **3. Agent adapter** | a `/handoff` skill/plugin | your harness config | `compact` at session end, `pickup` at start | low — thin wrapper over the CLI |
 | **4. Hosted microservice** | wrap core fns in a handler | Lambda / Fluid Compute / worker | drift-check-as-a-service, ingest, webhooks | opt-in — only if you need it |
@@ -58,14 +58,14 @@ so a port can't claim the capability until it passes.
 ## 4. Adapter recipes
 
 ### Claude Code plugin / skill
-A `/handoff` skill calls `handoff-ledger compact --out SESSION-HANDOFF.md` at session
-end; `/handoff-pickup` calls `handoff-ledger pickup SESSION-HANDOFF.md` and feeds the
+A `/handoff` skill calls `germinate compact --out SESSION-HANDOFF.md` at session
+end; `/handoff-pickup` calls `germinate pickup SESSION-HANDOFF.md` and feeds the
 prompt back. See [`../adapters/claude-code/`](../adapters/claude-code/). Cursor and
 Aider are the same shape — a start hook and an end hook over the same two verbs.
 
 ### GitHub Action (Tier 2)
 ```yaml
-- uses: flashesofbrilliance/handoff-ledger/.github/actions/drift-check@v0
+- uses: flashesofbrilliance/germinate/.github/actions/drift-check@v0
   with:
     manifest: manifest.json
 ```
@@ -73,7 +73,7 @@ The composite action is at [`../.github/actions/drift-check/action.yml`](../.git
 
 ### MCP server (optional)
 A thin server exposing the core fns as tools, for agents that prefer to *call*
-handoff-ledger rather than shell out. Documented, not part of the dependency-light
+germinate rather than shell out. Documented, not part of the dependency-light
 core. Tool names are the last column of the matrix above.
 
 ### Hosted microservice (infra-agnostic)
@@ -85,7 +85,7 @@ The core never imports the platform.
 
 ## 5. Config file (optional)
 
-Place a `.handoff-ledger.json` at the repo root to set defaults so commands need no
+Place a `.germinate.json` at the repo root to set defaults so commands need no
 flags:
 
 ```json

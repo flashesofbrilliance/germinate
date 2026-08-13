@@ -1,4 +1,4 @@
-# handoff-ledger — Specification v0.1.0
+# germinate — Specification v0.1.0
 
 > Normative spec for a serializable, provenance-carrying handoff protocol for
 > multi-agent / multi-worktree development. Status: **DRAFT**. This document uses

@@ -2,7 +2,7 @@
 # Conformance + smoke for the shell impl. Driven by ../../conformance/cases.json (docset + belief-log subset).
 set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"
-HL="$HERE/hl.sh"
+HL="$HERE/germinate.sh"
 CONF="$(cd "$HERE/../../conformance" && pwd)"
 pass=0; fail=0
 ok() { pass=$((pass+1)); }

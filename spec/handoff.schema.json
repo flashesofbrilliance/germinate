@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/flashesofbrilliance/handoff-ledger/spec/handoff.schema.json",
-  "title": "handoff-ledger handoff front-matter",
+  "$id": "https://github.com/flashesofbrilliance/germinate/spec/handoff.schema.json",
+  "title": "germinate handoff front-matter",
   "description": "The YAML front-matter object of a SESSION-HANDOFF markdown file: coal->diamond seed with head (pickup) + tail (lineage).",
   "type": "object",
   "required": ["handoffVersion", "docset", "head"],

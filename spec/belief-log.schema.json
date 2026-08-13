@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/flashesofbrilliance/handoff-ledger/spec/belief-log.schema.json",
-  "title": "handoff-ledger belief-log line",
+  "$id": "https://github.com/flashesofbrilliance/germinate/spec/belief-log.schema.json",
+  "title": "germinate belief-log line",
   "description": "One line of an append-only, OpenTelemetry-shaped belief log (JSONL). Validate each line independently.",
   "type": "object",
   "required": ["ts", "trace", "span", "kind"],

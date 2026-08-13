@@ -1,4 +1,4 @@
-name: "handoff-ledger drift-check"
+name: "germinate drift-check"
 description: "Fail the build if any projection is STALE / OUT_OF_SYNC / MISSING vs the docset. Tier-2 team gate."
 inputs:
   manifest:
@@ -16,13 +16,13 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: "20"
-    - name: Install handoff-ledger
+    - name: Install germinate
       shell: bash
-      run: npm install -g handoff-ledger
+      run: npm install -g germinate
     - name: drift-check
       shell: bash
-      run: handoff-ledger drift-check --manifest "${{ inputs.manifest }}"
+      run: germinate drift-check --manifest "${{ inputs.manifest }}"
     - name: serializability (optional)
       if: ${{ inputs.serializability == 'true' }}
       shell: bash
-      run: handoff-ledger serializability --strict --manifest "${{ inputs.manifest }}"
+      run: germinate serializability --strict --manifest "${{ inputs.manifest }}"

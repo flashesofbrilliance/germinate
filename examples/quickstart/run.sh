@@ -3,7 +3,7 @@
 # Usage: sh examples/quickstart/run.sh   (uses the Node CLI from this repo)
 set -eu
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-HL="node $ROOT/packages/node/bin/handoff-ledger.js"
+HL="node $ROOT/packages/node/bin/germinate.js"
 WORK="$(mktemp -d)"
 cd "$WORK"
 

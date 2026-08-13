@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to handoff-ledger. Format: [Keep a Changelog](https://keepachangelog.com);
+All notable changes to germinate. Format: [Keep a Changelog](https://keepachangelog.com);
 this project aims for [SemVer](https://semver.org).
 
 ## [0.1.0] — unreleased

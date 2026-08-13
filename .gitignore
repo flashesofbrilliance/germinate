@@ -13,8 +13,8 @@ build/
 # OS / editor
 .DS_Store
 *.swp
-# local handoff-ledger working files (examples keep their own)
+# local germinate working files (examples keep their own)
 /belieflog.jsonl
 /manifest.json
 /SESSION-HANDOFF.md
-/.handoff-ledger.json
+/.germinate.json

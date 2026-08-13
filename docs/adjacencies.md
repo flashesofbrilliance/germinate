@@ -104,7 +104,7 @@ inline content and nudge toward an `evidence[]` handle.
   flag** and an **interoperable function** (a toggle in config *and* a callable in
   the SDK), mapping 1:1 onto the L0–L5 stack. Pure composition over the existing
   functions, so it stays dependency-light; stages *gate*, they never *decide*
-  (NOTOMATION-safe). Surfaced as `handoff-ledger check --pipeline <config>`.
+  (NOTOMATION-safe). Surfaced as `germinate check --pipeline <config>`.
 - **`init` — prime a tabula-rasa project.** Already shipped (Node): scaffolds a
   starter manifest + opened belief-log + config and emits a priming pickup prompt so
   a fresh session (or a net-new Claude project) starts with the discipline in place
@@ -158,7 +158,7 @@ answers the higher-value question *"when is the opportune moment to bring the hu
 in?"* — **conditional cron, not cron-driven**: evaluation fires on *conditions*
 (a belief-log crossing a risk/confidence divergence, a drift half-life exceeded, a
 staleness-distance threshold), never on wall-clock. It is the natural consumer of
-everything handoff-ledger produces: this repo lays the durable, condition-bearing
+everything germinate produces: this repo lays the durable, condition-bearing
 substrate; `kairos` watches it and fires "now." A separate repo, a separate clean
 public good, sequenced immediately after this one — and, like the others, a killer
 infra-agnostic microservice built on the wrap-the-core pattern.
@@ -167,5 +167,5 @@ infra-agnostic microservice built on the wrap-the-core pattern.
 
 A replay theater / visualizer over belief-logs (and their OTLP projection): scrub the
 timeline, watch conviction gradients form and collapse, overlay sessions, annotate
-inflection points. `handoff-ledger` produces the durable trace; `observatory` renders
+inflection points. `germinate` produces the durable trace; `observatory` renders
 it. Separable, and a public good in its own right.

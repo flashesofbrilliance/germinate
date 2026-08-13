@@ -1,10 +1,10 @@
 [package]
-name = "handoff-ledger"
+name = "germinate"
 version = "0.1.0"
 edition = "2021"
 description = "A serializable, provenance-carrying handoff protocol for multi-agent / multi-worktree development."
 license = "MIT"
-repository = "https://github.com/flashesofbrilliance/handoff-ledger"
+repository = "https://github.com/flashesofbrilliance/germinate"
 readme = "README.md"
 
 # Zero dependencies by design: a tiny hand-rolled JSON parser keeps the binary small,
@@ -12,7 +12,7 @@ readme = "README.md"
 [dependencies]
 
 [[bin]]
-name = "handoff-ledger"
+name = "germinate"
 path = "src/main.rs"
 
 [profile.release]

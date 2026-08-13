@@ -8,8 +8,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, ".."))
 CONF = os.path.abspath(os.path.join(HERE, "../../../conformance"))
 
-from handoff_ledger import belieflog, docset  # noqa: E402
-from handoff_ledger.manifest import load_manifest, drift_check  # noqa: E402
+from germinate import belieflog, docset  # noqa: E402
+from germinate.manifest import load_manifest, drift_check  # noqa: E402
 
 with open(os.path.join(CONF, "cases.json")) as f:
     CASES = json.load(f)

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/flashesofbrilliance/handoff-ledger/spec/manifest.schema.json",
-  "title": "handoff-ledger manifest",
+  "$id": "https://github.com/flashesofbrilliance/germinate/spec/manifest.schema.json",
+  "title": "germinate manifest",
   "description": "Registry of every surface (canonical git files + advisory projections) and its sync status.",
   "type": "object",
   "required": ["docsetVersion", "surfaces"],

@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# handoff-ledger — POSIX shell implementation.
+# germinate — POSIX shell implementation.
 # Zero hard dependencies for the git-native verbs (serializability, install-hooks, belief append).
 # JSON verbs (belief validate, drift-check) use `jq` when available and degrade with a clear message.
 # Conformant against ../../conformance/cases.json (see hooks/ and completions/ for extras).
@@ -16,7 +16,7 @@ DOCSET_RE='^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[A-Za-z0-9][A-Za-z0-9]*\.
 
 usage() {
   cat <<EOF
-handoff-ledger v$HL_VERSION (shell) — serializable, provenance-carrying handoff protocol.
+germinate v$HL_VERSION (shell) — serializable, provenance-carrying handoff protocol.
 
 USAGE
   $PROG <command> [options]
@@ -100,10 +100,10 @@ install_hooks() {
   hook="$top/.git/hooks/pre-push"
   cat > "$hook" <<'HOOK'
 #!/bin/sh
-# installed by handoff-ledger — serializability guard
-if command -v handoff-ledger >/dev/null 2>&1; then exec handoff-ledger serializability --strict
-elif command -v hl >/dev/null 2>&1; then exec hl serializability --strict
-else echo "handoff-ledger not on PATH; skipping serializability guard" >&2; exit 0; fi
+# installed by germinate — serializability guard
+if command -v germinate >/dev/null 2>&1; then exec germinate serializability --strict
+elif command -v gm >/dev/null 2>&1; then exec gm serializability --strict
+else echo "germinate not on PATH; skipping serializability guard" >&2; exit 0; fi
 HOOK
   chmod +x "$hook"
   echo "installed pre-push hook: $hook"

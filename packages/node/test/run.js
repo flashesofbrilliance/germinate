@@ -62,7 +62,7 @@ t('pickup prompt is self-contained', () => {
 });
 
 t('CLI end-to-end: validate + drift-check + docset-cmp exit codes', () => {
-  const bin = path.resolve(__dirname, '../bin/handoff-ledger.js');
+  const bin = path.resolve(__dirname, '../bin/germinate.js');
   const conf = path.resolve(__dirname, '../../../conformance');
   // valid log => exit 0
   execFileSync('node', [bin, 'belief', 'validate', path.join(conf, 'belief-log/valid/belief-open.jsonl')]);

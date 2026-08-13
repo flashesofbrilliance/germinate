@@ -1,4 +1,4 @@
-"""handoff-ledger — stdlib-only Python implementation.
+"""germinate — stdlib-only Python implementation.
 
 A serializable, provenance-carrying handoff protocol: append-only belief-log,
 drift-visible manifest, coal->diamond compaction, git-serializability check.

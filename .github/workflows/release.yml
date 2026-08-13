@@ -1,7 +1,7 @@
 name: Release (signed)
 
 # Produces SIGNED artifacts. The MAINTAINER triggers this and holds ALL secrets.
-# handoff-ledger prepares the workflow; it never bundles or handles your keys/tokens.
+# germinate prepares the workflow; it never bundles or handles your keys/tokens.
 #
 # Required repo secrets (the maintainer sets these — Claude never touches them):
 #   NPM_TOKEN            — npm automation token with publish rights (provenance uses OIDC, no extra key)
@@ -40,21 +40,21 @@ jobs:
       - name: Package + checksum
         run: |
           cd packages/rust/target/${{ matrix.target }}/release
-          tar czf handoff-ledger-${{ matrix.target }}.tar.gz handoff-ledger
-          shasum -a 256 handoff-ledger-${{ matrix.target }}.tar.gz > handoff-ledger-${{ matrix.target }}.tar.gz.sha256
+          tar czf germinate-${{ matrix.target }}.tar.gz germinate
+          shasum -a 256 germinate-${{ matrix.target }}.tar.gz > germinate-${{ matrix.target }}.tar.gz.sha256
       - name: Install cosign
         uses: sigstore/cosign-installer@v3
       - name: Sign the tarball (keyless / sigstore OIDC — no stored key)
         run: |
           cd packages/rust/target/${{ matrix.target }}/release
           COSIGN_EXPERIMENTAL=1 cosign sign-blob --yes \
-            --output-signature handoff-ledger-${{ matrix.target }}.tar.gz.sig \
-            --output-certificate handoff-ledger-${{ matrix.target }}.tar.gz.pem \
-            handoff-ledger-${{ matrix.target }}.tar.gz
+            --output-signature germinate-${{ matrix.target }}.tar.gz.sig \
+            --output-certificate germinate-${{ matrix.target }}.tar.gz.pem \
+            germinate-${{ matrix.target }}.tar.gz
       - uses: actions/upload-artifact@v4
         with:
           name: bin-${{ matrix.target }}
-          path: packages/rust/target/${{ matrix.target }}/release/handoff-ledger-*
+          path: packages/rust/target/${{ matrix.target }}/release/germinate-*
 
   github-release:
     needs: build-binaries

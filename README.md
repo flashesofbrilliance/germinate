@@ -1,4 +1,4 @@
-# handoff-ledger
+# germinate
 
 > A serializable, provenance-carrying **handoff protocol** for multi-agent /
 > multi-worktree development. Compact one high-entropy session into a dense,
@@ -69,11 +69,11 @@ drift, so it is a CI gate. See [`SPEC.md`](SPEC.md) for the normative model.
 ## Install
 
 ```bash
-# npm (Node CLI — bins: handoff-ledger, hl)
-npm install -g handoff-ledger
+# npm (Node CLI — bins: germinate, hl)
+npm install -g germinate
 
 # Homebrew (signed single binary — the Rust build)
-brew install flashesofbrilliance/tap/handoff-ledger
+brew install flashesofbrilliance/tap/germinate
 
 # or vendor the zero-dep shell CLI directly
 cp packages/shell/hl.sh /usr/local/bin/hl && chmod +x /usr/local/bin/hl
@@ -89,24 +89,24 @@ cp packages/shell/hl.sh /usr/local/bin/hl && chmod +x /usr/local/bin/hl
 
 ```bash
 # 1. Record understanding as it forms (append-only, OTel-shaped)
-hl belief append notes.jsonl --kind trace.open --trace myproj --span _meta --note "belief log"
-hl belief append notes.jsonl --kind belief.open --trace myproj --span 1.path \
+germinate belief append notes.jsonl --kind trace.open --trace myproj --span _meta --note "belief log"
+germinate belief append notes.jsonl --kind belief.open --trace myproj --span 1.path \
    --belief "Path A is fastest" --confidence 0.6 --risk 0.4 --status OPEN
-hl belief append notes.jsonl --kind belief.update --trace myproj --span 1.path \
+germinate belief append notes.jsonl --kind belief.update --trace myproj --span 1.path \
    --from "Path A is fastest" --to "Path B, given the new constraint" \
    --trigger "benchmark" --confidence 0.85 --risk 0.15 --status ALIGNED
 
 # 2. Track every surface + catch drift (CI gate)
-hl drift-check --manifest manifest.json          # exit 1 if any projection is STALE
+germinate drift-check --manifest manifest.json          # exit 1 if any projection is STALE
 
 # 3. Compact the session into a durable seed + a cold-start pickup prompt
-hl compact --docset 2026-08-13-build.1 --belieflog notes.jsonl \
+germinate compact --docset 2026-08-13-build.1 --belieflog notes.jsonl \
    --starts-at "wire delivery to the sandbox" --out SESSION-HANDOFF.md
-hl compact --belieflog notes.jsonl --starts-at "…" --prompt   # emit pickup prompt
+germinate compact --belieflog notes.jsonl --starts-at "…" --prompt   # emit pickup prompt
 
 # 4. Guard the serialized surface (force-push risk / untracked shared state)
-hl serializability --strict
-hl install-hooks                                  # installs a pre-push breaker
+germinate serializability --strict
+germinate install-hooks                                  # installs a pre-push breaker
 ```
 
 Full worked example: [`examples/quickstart/`](examples/quickstart/).
