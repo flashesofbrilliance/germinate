@@ -1,8 +1,11 @@
 # Rust
 packages/rust/target/
+
 # Node
 node_modules/
 *.tgz
+npm-debug.log*
+
 # Python
 __pycache__/
 *.pyc
@@ -10,10 +13,32 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets — never commit (defensive; germinate uses no env at runtime)
+.env
+.env.*
+
+# Release / signing artifacts (produced by .github/workflows/release.yml)
+*.tar.gz
+*.sig
+*.pem
+
+# Merge / rewrite leftovers
+*.orig
+*.rej
+*.bak
+
 # OS / editor
 .DS_Store
 *.swp
-# local germinate working files (examples keep their own)
+.idea/
+.vscode/
+
+# local germinate working files at repo root (examples/ and conformance/ keep their own;
+# _SEEDS/ is intentionally NOT ignored — the local seed bank is meant to be committed)
 /belieflog.jsonl
 /manifest.json
 /SESSION-HANDOFF.md
