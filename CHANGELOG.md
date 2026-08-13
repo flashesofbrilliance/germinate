@@ -46,6 +46,9 @@ Initial scaffold. Four primitives, four conformant implementations, distribution
   serialized/advisory gap visible"; anti-sycophancy "guarantee" → "self-consistency lint".
 - Seven-stage grammar + dormancy semantics ([`docs/grammar.md`](docs/grammar.md)); the
   germinate↔ARCS boundary ([`docs/adjacencies.md`](docs/adjacencies.md)).
+- **Lineage genetic markers**: every minted seed carries `lineage.marker` (deterministic
+  `g1:<sha256[:12]>` content fingerprint) + `lineage.parents` (ancestor ids; empty =
+  genesis). `germinate seed --parent <id1,id2>`. Composes with hash-chaining + drift-ledger.
 
 ### Not yet
 - Python/Rust ports of `compact`/`pickup`/`serializability` (spec'd, Node-complete; fixtures pending).

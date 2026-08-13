@@ -30,6 +30,15 @@
     },
     "global": { "type": "boolean", "default": false, "description": "Opt-in to the global cross-project bank. Default false = local, tenant-scoped." },
     "docset": { "type": "string", "description": "Optional dated stamp for staleness (YYYY-MM-DD-<phase>.<n>)." },
+    "lineage": {
+      "type": "object",
+      "description": "Genetic lineage. marker = a stable content fingerprint of the seed; parents = the seed id(s) it descends from. Composes with hash-chaining for a tamper-evident ancestry.",
+      "additionalProperties": true,
+      "properties": {
+        "marker": { "type": "string", "description": "Content fingerprint, e.g. 'g1:ab12cd34ef56'." },
+        "parents": { "type": "array", "items": { "type": "string" }, "description": "Ancestor seed id(s). Empty for a genesis seed." }
+      }
+    },
     "triggers": { "type": "array", "items": { "type": "string" }, "description": "v0.1: human annotation ONLY, not match input. Reserved for the v0.2 semantic (ARCS) layer." },
     "care": { "type": "string", "description": "Optional maintenance/staleness note (annotation)." },
     "applications": { "type": "array", "items": { "type": "string" }, "description": "Optional annotation." }

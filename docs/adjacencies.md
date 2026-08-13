@@ -184,6 +184,27 @@ clean public good that does not give away the moat.
   is a thin shell around it. Drift-check-as-a-service, belief-log ingest, escalation
   webhook.
 
+## The `arcs` umbrella (aggregator, not a monolith)
+
+The public goods stay **standalone, independently-adoptable repos** (germinate, the
+skills, later kairos/observatory). A separate `arcs` umbrella repo is a thin
+**aggregator** that *links to / dispatches over* them — never vendors them:
+- a **headless meta-CLI** that shells to each tool through its stable `--json` contract;
+- a **head mini-app** (e.g. on labs.arcs.care) presenting the same tools with a UI.
+Same "wrap-the-core, never import the platform" pattern, one level up: the umbrella is a
+launcher/registry over standalone tools. This keeps germinate a brand-neutral public good
+(its identity is not `arcs/tools/germinate`) while giving the ecosystem one head+headless
+front door. (Repo decision: two repos; umbrella scoped to `skills/` + the aggregator.)
+
+## Lineage genetic markers (shipped)
+
+Every minted seed carries a `lineage` block: a **marker** (a deterministic content
+fingerprint, `g1:<sha256[:12]>` of id+soil+body) and **parents** (ancestor seed ids;
+empty = genesis, e.g. `adam == atom`). This gives ancestry an explicit spine, composes
+with the hash-chaining roadmap (markers → tamper-evident lineage), and feeds the
+drift-ledger (trace which ancestor a stale belief inherited from). Tributaries should
+carry the same marker so a branch traces to the seed that spawned it.
+
 ## Designated public-good #2 — `kairos`
 
 The circuit-breaker answers *"when must the human stop the machine?"*. **Kairos**

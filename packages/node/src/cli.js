@@ -46,8 +46,8 @@ COMMANDS
   docset-cmp <a> <b>                        Compare two docset versions (-1/0/1).
 
 SEED LAYER (context-triggered re-expression):
-  seed --soil <a,b> [--type t --antipatterns x,y --content .. --out f --global]
-                                           Mint a seed (content + germination conditions).
+  seed --soil <a,b> [--type t --antipatterns x,y --content .. --out f --global --parent id1,id2]
+                                           Mint a seed (content + germination conditions + lineage marker).
   seed lint <seed.md>                      Publish-safety: warn on un-redacted internal identifiers.
   plant <seed.md> [--global]               Deposit into the local (default) or global bank.
   sprout [--context <s>] [--trace <t>] [--global] [--all]
@@ -203,12 +203,17 @@ function cmdSeed(args) {
   const { git } = require('./git');
   const commit = git(['rev-parse', '--short', 'HEAD'], process.cwd());
   if (commit) fmLines.push(`  commit: ${commit}`);
-  fmLines.push('---', '');
   const body = f.content || (f.title ? `# ${f.title}\n\n(seed body — replace with the durable insight)\n` : '(seed body)\n');
+  const parents = list(f.parent);
+  const marker = seedlib.computeMarker(id, soil, body);
+  fmLines.push('lineage:');
+  fmLines.push(`  marker: ${marker}`);
+  fmLines.push(`  parents: [${parents.join(', ')}]`);
+  fmLines.push('---', '');
   const outFile = f.out || path.join(localBank(), `${id}.md`);
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(outFile, fmLines.join('\n') + '\n' + body);
-  out({ wrote: outFile, id }, `minted seed: ${outFile} (id=${id})`, f.json);
+  out({ wrote: outFile, id, marker, parents }, `minted seed: ${outFile} (id=${id}, marker=${marker}${parents.length ? ', parents=' + parents.join(',') : ''})`, f.json);
   return 0;
 }
 

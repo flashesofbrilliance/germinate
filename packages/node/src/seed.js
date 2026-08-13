@@ -6,6 +6,14 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+// Genetic marker: a stable content fingerprint of a seed (id + soil + body).
+// Deterministic; composes with hash-chaining for a tamper-evident lineage. Prefix 'g1:' = format v1.
+function computeMarker(id, soil, body) {
+  const canonical = `${id}\n${(soil || []).join(',')}\n${(body || '').trim()}`;
+  return 'g1:' + crypto.createHash('sha256').update(canonical).digest('hex').slice(0, 12);
+}
 
 // ---- minimal YAML-subset frontmatter parser (shared contract; see conformance) ----
 // Supports: `key: scalar`, `key: [a, b]`, block lists (`  - item`), one-level nested map,
@@ -148,4 +156,4 @@ function lintSeed(seedFileText) {
   return { ok: warnings.length === 0, warnings };
 }
 
-module.exports = { parseFrontmatter, tokenize, phraseMatches, loadSeedsFromDir, sprout, lintSeed };
+module.exports = { parseFrontmatter, tokenize, phraseMatches, loadSeedsFromDir, sprout, lintSeed, computeMarker };
