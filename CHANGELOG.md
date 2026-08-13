@@ -29,6 +29,24 @@ Initial scaffold. Four primitives, four conformant implementations, distribution
   [`docs/PRINCIPLES.md`](docs/PRINCIPLES.md), [`docs/adjacencies.md`](docs/adjacencies.md),
   [`docs/RELEASING.md`](docs/RELEASING.md).
 
+### Seed layer (added after an adversarial hardening pass)
+- **seed / plant / sprout / seed lint** verbs (Node) + a **seed** as content + germination
+  conditions ([`spec/seed.schema.json`](spec/seed.schema.json), SPEC §8).
+- **`sprout` is deterministic by design** — literal `soil`/`tags` intersection, a
+  *visible* antipattern veto, `STALE` demotion when a `soil` path vanished from git, and
+  local-over-global precedence. No NLP/LLM (semantic ripeness = the private ARCS layer).
+- **Minimal seed** = content + `soil` + `provenance`; `seed_type` is an open tag;
+  unknown fields tolerated (accretion). `preconditions`/`care`/`applications` cut from
+  required; `triggers` are annotation-only in v0.1.
+- **Tenant-safe**: local `_SEEDS/` default, global opt-in, trace-boundary enforced,
+  `seed lint` refuses un-redacted internal identifiers before global publish.
+- Conformant in **Node + Python** against shared `seedSprout` fixtures; shell + Rust are
+  tracked conformance targets.
+- Hardening-driven honesty fixes: "reconciles concurrent workers" → "makes the
+  serialized/advisory gap visible"; anti-sycophancy "guarantee" → "self-consistency lint".
+- Seven-stage grammar + dormancy semantics ([`docs/grammar.md`](docs/grammar.md)); the
+  germinate↔ARCS boundary ([`docs/adjacencies.md`](docs/adjacencies.md)).
+
 ### Not yet
 - Python/Rust ports of `compact`/`pickup`/`serializability` (spec'd, Node-complete; fixtures pending).
 - Roadmap verbs: `drift-check --age` (staleness-distance), hash-chained belief-log, OTLP exporter,

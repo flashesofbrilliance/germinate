@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flashesofbrilliance/germinate/spec/seed.schema.json",
+  "title": "germinate seed",
+  "description": "A seed = content + germination conditions. This schema validates the parsed frontmatter object. Unknown fields MUST be tolerated (forward-compat / schema accretion). v0.1 matches ONLY on literal soil + tags; triggers/care/applications are human annotation, not match input.",
+  "type": "object",
+  "required": ["kind", "soil", "provenance"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": { "const": "seed" },
+    "schema_version": { "type": "integer", "minimum": 1, "default": 1 },
+    "id": { "type": "string", "description": "Stable id for dedupe/precedence; defaults to the filename stem." },
+    "seed_type": { "type": "string", "description": "OPEN free-text tag (not a closed enum). E.g. adr, memory, problem-shape, design-token." },
+    "soil": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Contexts where it thrives (repo/path/domain/token). MATCH dimension AND bank router. A soil entry containing '/' is treated as a git path and staleness-checked."
+    },
+    "tags": { "type": "array", "items": { "type": "string" }, "description": "Optional extra literal match tokens." },
+    "antipatterns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Where NOT to plant it. A literal match here SUPPRESSES the seed (visibly)."
+    },
+    "provenance": {
+      "type": "object",
+      "description": "Where the seed was minted from. Global-bank seeds MUST NOT carry un-redacted internal identifiers (use rosetta handles).",
+      "additionalProperties": true
+    },
+    "global": { "type": "boolean", "default": false, "description": "Opt-in to the global cross-project bank. Default false = local, tenant-scoped." },
+    "docset": { "type": "string", "description": "Optional dated stamp for staleness (YYYY-MM-DD-<phase>.<n>)." },
+    "triggers": { "type": "array", "items": { "type": "string" }, "description": "v0.1: human annotation ONLY, not match input. Reserved for the v0.2 semantic (ARCS) layer." },
+    "care": { "type": "string", "description": "Optional maintenance/staleness note (annotation)." },
+    "applications": { "type": "array", "items": { "type": "string" }, "description": "Optional annotation." }
+  }
+}

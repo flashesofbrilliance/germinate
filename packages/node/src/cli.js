@@ -3,7 +3,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const belieflog = require('./belieflog');
+const seedlib = require('./seed');
 const { loadManifest, driftCheck } = require('./manifest');
 const { serializabilityCheck } = require('./git');
 const handoff = require('./handoff');
@@ -42,6 +44,17 @@ COMMANDS
   compact [options]                        Assemble a coal->diamond handoff seed (markdown).
   pickup <handoff.md>                      Emit a cold-start pickup prompt from a handoff.
   docset-cmp <a> <b>                        Compare two docset versions (-1/0/1).
+
+SEED LAYER (context-triggered re-expression):
+  seed --soil <a,b> [--type t --antipatterns x,y --content .. --out f --global]
+                                           Mint a seed (content + germination conditions).
+  seed lint <seed.md>                      Publish-safety: warn on un-redacted internal identifiers.
+  plant <seed.md> [--global]               Deposit into the local (default) or global bank.
+  sprout [--context <s>] [--trace <t>] [--global] [--all]
+                                           Surface seeds ripe for the current context.
+                                           Deterministic: literal soil/tags match; visible antipattern veto;
+                                           STALE if a soil path vanished. (Semantic ripeness = the ARCS layer, v0.2.)
+
   init                                     Prime a tabula-rasa project (manifest + belief-log + config + prompt).
   install-hooks                            Install the git pre-push serializability hook.
   version | help
@@ -157,6 +170,93 @@ function cmdDocsetCmp(args) {
   return 0;
 }
 
+function localBank() { return process.env.GERMINATE_LOCAL || '_SEEDS'; }
+function globalBank() { return process.env.GERMINATE_GLOBAL || path.join(os.homedir(), '.germinate', 'seeds'); }
+
+function cmdSeed(args) {
+  // germinate seed [sub] ...  — mint / lint
+  const sub = args._[1];
+  const f = args.flags;
+  if (sub === 'lint') {
+    const file = args._[2];
+    if (!file || !fs.existsSync(file)) throw new Error('usage: seed lint <seed.md>');
+    const r = seedlib.lintSeed(fs.readFileSync(file, 'utf8'));
+    let human = r.ok ? 'lint OK — safe to publish.' : 'lint WARNINGS:';
+    for (const w of r.warnings) human += `\n  ! ${w}`;
+    out(Object.assign({ file }, r), human, f.json);
+    return r.ok ? 0 : 1;
+  }
+  // mint a seed file (minimal: content + soil + antipatterns + provenance)
+  const list = (v) => v === undefined ? [] : String(v).split(',').map((s) => s.trim()).filter(Boolean);
+  const soil = list(f.soil);
+  if (soil.length === 0) throw new Error('seed requires --soil <a,b,...> (the context where it thrives; also routes the bank)');
+  const id = f.id || (f.title ? String(f.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `seed-${soil[0].replace(/[^a-z0-9]+/gi, '-')}`);
+  const fmLines = ['---', 'kind: seed', 'schema_version: 1', `id: ${id}`];
+  if (f.type) fmLines.push(`seed_type: ${f.type}`);
+  fmLines.push('soil:'); soil.forEach((s) => fmLines.push(`  - ${s}`));
+  const anti = list(f.antipatterns);
+  fmLines.push('antipatterns:'); anti.forEach((s) => fmLines.push(`  - ${s}`));
+  if (f.tags) { fmLines.push('tags:'); list(f.tags).forEach((s) => fmLines.push(`  - ${s}`)); }
+  if (f.global) fmLines.push('global: true');
+  fmLines.push('provenance:');
+  fmLines.push(`  minted_from: ${f.provenance || 'germinate seed CLI'}`);
+  const { git } = require('./git');
+  const commit = git(['rev-parse', '--short', 'HEAD'], process.cwd());
+  if (commit) fmLines.push(`  commit: ${commit}`);
+  fmLines.push('---', '');
+  const body = f.content || (f.title ? `# ${f.title}\n\n(seed body — replace with the durable insight)\n` : '(seed body)\n');
+  const outFile = f.out || path.join(localBank(), `${id}.md`);
+  fs.mkdirSync(path.dirname(outFile), { recursive: true });
+  fs.writeFileSync(outFile, fmLines.join('\n') + '\n' + body);
+  out({ wrote: outFile, id }, `minted seed: ${outFile} (id=${id})`, f.json);
+  return 0;
+}
+
+function cmdPlant(args) {
+  const file = args._[1];
+  const f = args.flags;
+  if (!file || !fs.existsSync(file)) throw new Error('usage: plant <seed.md> [--global]');
+  const { frontmatter } = seedlib.parseFrontmatter(fs.readFileSync(file, 'utf8'));
+  const goGlobal = f.global || frontmatter.global;
+  if (goGlobal) {
+    const lint = seedlib.lintSeed(fs.readFileSync(file, 'utf8'));
+    if (!lint.ok && !f.force) {
+      let human = 'refusing to plant to the GLOBAL bank — lint warnings (use --force to override, or redact):';
+      for (const w of lint.warnings) human += `\n  ! ${w}`;
+      out({ ok: false, warnings: lint.warnings }, human, f.json);
+      return 1;
+    }
+  }
+  const dest = goGlobal ? globalBank() : localBank();
+  fs.mkdirSync(dest, { recursive: true });
+  const to = path.join(dest, path.basename(file));
+  fs.copyFileSync(file, to);
+  out({ planted: to, bank: goGlobal ? 'global' : 'local' }, `planted → ${goGlobal ? 'global' : 'local'} bank: ${to}`, f.json);
+  return 0;
+}
+
+function cmdSprout(args) {
+  const f = args.flags;
+  const res = seedlib.sprout(
+    { localDir: f.local || localBank(), globalDir: f.global && typeof f.global === 'string' ? f.global : globalBank() },
+    { contextStr: f.context || '', cwd: process.cwd(), trace: f.trace, includeGlobal: !!f.global }
+  );
+  if (f.json) { out(res, '', true); return 0; }
+  let human = '';
+  if (res.surfaced.length === 0 && res.suppressed.length === 0 && res.stale.length === 0) {
+    human = 'winter — no ripe seeds for this context. (Plant your first seed: `germinate seed --soil <ctx> --out _SEEDS/x.md`)';
+  } else {
+    human += `SURFACED (${res.surfaced.length}):`;
+    for (const s of res.surfaced) human += `\n  ✔ ${s.id} [score ${s.score}] ← ${[...s.matchedSoil, ...s.matchedTags].join(', ')}${s.isGlobal ? ' (global)' : ''}`;
+    if (res.stale.length) { human += `\n\nSTALE (${res.stale.length}) — matched but soil path vanished:`; for (const s of res.stale) human += `\n  ⚠ ${s.id} — dead path: ${s.stalePaths.join(', ')}`; }
+    if (res.suppressed.length) { human += `\n\nSUPPRESSED (${res.suppressed.length}) — antipattern vetoed:`; for (const s of res.suppressed) human += `\n  ✖ ${s.id} — vetoed by: ${s.suppressedBy.join(', ')}`; }
+  }
+  if (res.shadowed.length) human += `\n\n(shadowed global seeds overridden by local: ${res.shadowed.join(', ')})`;
+  if (f.all && res.dormant.length) { human += `\n\nDORMANT (${res.dormant.length}):`; for (const s of res.dormant) human += `\n  · ${s.id}`; }
+  out(res, human, false);
+  return 0;
+}
+
 function cmdInit(args) {
   const f = args.flags;
   const docset = f.docset || (new Date().toISOString().slice(0, 10) + '-init.1');
@@ -232,6 +332,9 @@ function main(argv) {
       case 'compact': return cmdCompact(args);
       case 'pickup': return cmdPickup(args);
       case 'docset-cmp': return cmdDocsetCmp(args);
+      case 'seed': return cmdSeed(args);
+      case 'plant': return cmdPlant(args);
+      case 'sprout': return cmdSprout(args);
       case 'init': return cmdInit(args);
       case 'install-hooks': return cmdInstallHooks(args);
       case 'version': case '--version': process.stdout.write(VERSION + '\n'); return 0;

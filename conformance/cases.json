@@ -17,6 +17,18 @@
     { "a": "2026-08-12-postcall.9", "b": "2026-08-13-precall.1", "cmp": -1 },
     { "a": "2026-08-13-build.10", "b": "2026-08-13-build.2", "cmp": 1 }
   ],
+  "seedSprout": {
+    "_comment": "Deterministic surfacer. bank = seeds/bank/. cwd is set to the conformance dir (its path tokens do not collide with soil tokens). Staleness resolves soil paths relative to cwd.",
+    "bank": "seeds/bank",
+    "cases": [
+      { "context": "building a marketplace with payments", "surfaced": ["s-marketplace"], "suppressed": [], "stale": [] },
+      { "context": "b2c marketplace", "surfaced": [], "suppressed": ["s-marketplace"], "stale": [] },
+      { "context": "quarterly reporting", "surfaced": [], "suppressed": [], "stale": ["s-stale"] },
+      { "context": "auth oauth flow", "surfaced": ["s-auth"], "suppressed": [], "stale": [] },
+      { "context": "marketplace payments auth oauth", "surfaced": ["s-auth", "s-marketplace"], "suppressed": [], "stale": [] },
+      { "context": "", "surfaced": [], "suppressed": [], "stale": [] }
+    ]
+  },
   "driftCheck": [
     {
       "manifest": "manifest/all-in-sync.json",

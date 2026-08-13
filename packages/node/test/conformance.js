@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const belieflog = require('../src/belieflog');
+const seedlib = require('../src/seed');
 const { loadManifest, driftCheck } = require('../src/manifest');
 const { compareDocset } = require('../src/docset');
 
@@ -33,6 +34,18 @@ for (const c of cases.driftCheck) {
   log(ok === c.expectExitZero, `drift ${c.manifest} expected ok=${c.expectExitZero} got ${ok}`);
   for (const [id, v] of Object.entries(c.verdicts)) {
     log(verdicts[id] === v, `drift ${c.manifest} surface ${id} expected ${v} got ${verdicts[id]}`);
+  }
+}
+
+// 4. seed sprout (deterministic surfacer)
+if (cases.seedSprout) {
+  const bankDir = path.join(CONF, cases.seedSprout.bank);
+  for (const c of cases.seedSprout.cases) {
+    const res = seedlib.sprout({ localDir: bankDir, globalDir: null }, { contextStr: c.context, cwd: CONF, includeGlobal: false });
+    const ids = (arr) => arr.map((x) => x.id);
+    log(JSON.stringify(ids(res.surfaced)) === JSON.stringify(c.surfaced), `sprout "${c.context}" surfaced ${JSON.stringify(ids(res.surfaced))} != ${JSON.stringify(c.surfaced)}`);
+    log(JSON.stringify(ids(res.suppressed).sort()) === JSON.stringify([...c.suppressed].sort()), `sprout "${c.context}" suppressed ${JSON.stringify(ids(res.suppressed))} != ${JSON.stringify(c.suppressed)}`);
+    log(JSON.stringify(ids(res.stale).sort()) === JSON.stringify([...c.stale].sort()), `sprout "${c.context}" stale ${JSON.stringify(ids(res.stale))} != ${JSON.stringify(c.stale)}`);
   }
 }
 

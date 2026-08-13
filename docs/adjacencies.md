@@ -141,6 +141,20 @@ clean public good that does not give away the moat.
   the project can't green until its MVAs exist), and **dependencies / runtime
   sources / configs** as canonical surfaces registered at birth. Dependency-light:
   profiles are merged JSON over the starter manifest.
+- **Abductive retrieval + a deterministic reward ledger (`germinate audit`).** The
+  belief-log is abduction made durable (`belief.open` = best-explanation hypothesis;
+  `belief.update` = revision as evidence lands), and `sprout` is abductive *retrieval*
+  (surface the priors that best apply to the observed context). germinate keeps this
+  **deterministic** — abductive *ranking* is judgment, hence the ARCS layer, not the
+  open socket. It also grounds the schema-accretion rule: abduction favors **folksonomy
+  over taxonomy** (accrete hypotheses from observations), which is why the seed schema
+  must accrete, not be imposed. **The RL tie-in:** treat each seed as a policy prior and
+  bank its *outcome events* as an append-only reward ledger — STALE (soil path decayed),
+  SUPERSEDED (hypothesis lost), newly-SUPPRESSED (context turned against it), match-rate
+  (over-broad noise vs dead). Accumulated, these give a **drift-risk / tech-debt score**
+  (lagging, carbon-dated — the drift half-life). All deterministic (no model): germinate
+  banks the reward *signal*; the RL *learning* on top (which priors to trust, when to
+  retire) is the ARCS vox-animus layer. Surfaced as `germinate audit`.
 - **North-star metric: squash-rate narrowing.** Measure discard/rework
   (`SUPERSEDED` ratio, belief-update churn per artifact, git squash stats). Its
   *narrowing over time* is a lagging indicator that the atomic compaction loops work.

@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(HERE, ".."))
 CONF = os.path.abspath(os.path.join(HERE, "../../../conformance"))
 
 from germinate import belieflog, docset  # noqa: E402
+from germinate import seed as seedlib  # noqa: E402
 from germinate.manifest import load_manifest, drift_check  # noqa: E402
 
 with open(os.path.join(CONF, "cases.json")) as f:
@@ -32,6 +33,21 @@ class Conformance(unittest.TestCase):
             self.assertEqual(ok, c["expectExitZero"], c["manifest"])
             for i, v in c["verdicts"].items():
                 self.assertEqual(verdicts[i], v, (c["manifest"], i))
+
+
+class SeedSprout(unittest.TestCase):
+    def test_sprout(self):
+        spec = CASES.get("seedSprout")
+        if not spec:
+            return
+        bank = os.path.join(CONF, spec["bank"])
+        for c in spec["cases"]:
+            res = seedlib.sprout({"localDir": bank, "globalDir": None},
+                                 {"contextStr": c["context"], "cwd": CONF, "includeGlobal": False})
+            ids = lambda arr: [x["id"] for x in arr]
+            self.assertEqual(ids(res["surfaced"]), c["surfaced"], ("surfaced", c["context"]))
+            self.assertEqual(sorted(ids(res["suppressed"])), sorted(c["suppressed"]), ("suppressed", c["context"]))
+            self.assertEqual(sorted(ids(res["stale"])), sorted(c["stale"]), ("stale", c["context"]))
 
 
 class AppendOnly(unittest.TestCase):

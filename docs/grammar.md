@@ -40,16 +40,20 @@ seed. The loop is what makes the bank compound instead of merely accumulate.
 
 ## The activation contract (germinate / sprout)
 
-Given the current context (tokens from `--context`, `--soil`, cwd, or git):
+Given the current context (tokens from `--context`, `--trace`, and cwd):
 
-1. For each seed, a **trigger** or **soil** entry *matches* when all its tokens are a
-   subset of the context tokens (case-insensitive).
-2. A seed is **ripe** iff at least one trigger or soil matches **and** no `antipattern`
-   matches (antipatterns suppress — "where NOT to plant it").
-3. `preconditions` that reference checkable state gate ripeness; unverifiable ones are
-   surfaced as *caveats*, never silently assumed (anti-hallucination).
-4. Ripe seeds sort by match score (desc), then id (asc) for determinism.
-5. Dormant (unmatched) seeds are **retained untouched** — no GC, no penalty.
+1. For each seed, a **soil** or **tags** entry *matches* when all its tokens are a subset
+   of the context tokens (case-insensitive). `score` = count of matching soil+tags.
+   (`triggers` are v0.1 **annotation only**, reserved for the semantic/ARCS layer;
+   `preconditions` were cut in v0.1 — see the hardening notes.)
+2. Classification, in precedence order: any `antipattern` match → **SUPPRESSED** (the
+   vetoing antipattern is shown); else `score > 0` with a vanished soil path → **STALE**
+   (demoted, never surfaced confident); else `score > 0` → **SURFACED**; else
+   → **DORMANT**.
+3. SURFACED sorts by `score` (desc), then `id` (asc) for determinism.
+4. Dormant (unmatched) seeds are **retained untouched** — no GC, no penalty. An empty
+   result is a healthy "winter", never an error.
 
-This contract is what the conformance suite pins, so `germinate` / `sprout` behave
-identically across Node, Python, Rust, and shell.
+This is **deterministic** (no NLP/embeddings/LLM) so the conformance suite can pin it and
+`sprout` cannot hallucinate a match. Semantic ripeness is the private ARCS layer, not
+this socket. The contract is fixtured, so `sprout` behaves identically across runtimes.

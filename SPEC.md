@@ -224,7 +224,58 @@ core and MUST live under [`adapters/`](adapters/). See that directory's README.
 
 ---
 
-## 8. Conformance
+## 8. Seed layer (context-triggered re-expression)
+
+A **seed** is a stored unit (content) plus **germination conditions** (metadata that
+decides when it should surface). Seeds are Markdown files with YAML front-matter,
+validated by [`spec/seed.schema.json`](spec/seed.schema.json). This section is a data
+contract, not a metaphor; the metaphor lives in the README.
+
+### 9.1 Seed object (front-matter)
+
+- `kind` MUST be `"seed"`.
+- `soil` (array, required, non-empty) — literal match tokens/phrases AND the bank
+  router. A `soil` entry containing `/` is treated as a git path and staleness-checked.
+- `provenance` (object, required) — where it was minted from. A seed destined for the
+  global bank MUST NOT carry un-redacted internal identifiers (use rosetta handles).
+- `antipatterns` (array) — a literal match here SUPPRESSES the seed (visibly).
+- `id` (string) — stable id for dedupe/precedence; defaults to the filename stem.
+- `tags` (array), `seed_type` (OPEN free-text string), `global` (bool, default false).
+- `schema_version` (int). Implementations MUST **tolerate unknown fields** (accretion).
+- `triggers`, `care`, `applications` are **annotation only in v0.1** — NOT match input.
+
+Minimum viable seed = content + `soil` + `provenance` (+ `antipatterns` recommended).
+
+### 9.2 Banks
+
+- **local** (`<repo>/_SEEDS/`) is the DEFAULT bank and is tenant-scoped.
+- **global** (`$HOME/.germinate/seeds/`) is opt-in per seed (`global: true`).
+- Local overrides global by `id`; the shadowed global seed MUST be reported, not
+  silently dropped. Scores MUST NOT double-count a deduped seed.
+- Tenant boundary: a global seed surfaces across a differing `trace` ONLY if its `soil`
+  explicitly whitelists that trace.
+
+### 9.3 The `sprout` contract (deterministic — normative)
+
+Given a context (tokens from `--context`, cwd, and `--trace`):
+
+1. Tokenize context and each `soil`/`tags`/`antipatterns` entry (lowercase, split on
+   non-alphanumerics). An entry **matches** iff all its tokens are a subset of the
+   context tokens.
+2. `score` = number of matching `soil` + `tags` entries.
+3. Classification (precedence): if any `antipattern` matches → **SUPPRESSED** (the
+   matching antipattern MUST be shown); else if `score > 0` and a matched-relevant
+   `soil` path no longer exists → **STALE** (demoted, never surfaced as confident);
+   else if `score > 0` → **SURFACED**; else → **DORMANT** (retained untouched).
+4. SURFACED sorts by `score` desc, then `id` asc (deterministic tie-break).
+5. An empty result set is **valid and healthy** ("winter"), never an error.
+
+v0.1 performs **no semantic / embedding / LLM ranking** — that is judgment, has no
+deterministic fixture, and would violate §anti-hallucination. Semantic ripeness is a
+named, deferred layer (see the README's germinate↔ARCS boundary). Dormant seeds are
+**never garbage-collected** — dormancy is a first-class state.
+
+## 9. Conformance
 
 An implementation is **conformant** if it passes every fixture in
 [`conformance/`](conformance/). Fixtures are language-neutral: input files plus

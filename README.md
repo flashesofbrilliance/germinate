@@ -2,9 +2,9 @@
 
 > A serializable, provenance-carrying **handoff protocol** for multi-agent /
 > multi-worktree development. Compact one high-entropy session into a dense,
-> durable seed; reconcile many concurrent workers into one agreed order without
-> lost updates; and make the gap between *serialized* and *advisory* state
-> **visible and enforceable**.
+> durable seed; let many concurrent workers reconcile *through git* without lost
+> updates; and make the gap between *serialized* (git-tracked) and *advisory*
+> (everything else) state **visible and enforceable**.
 
 **License:** MIT · **Status:** v0.1.0 (draft) · **Runtimes:** Node · Python · Rust · POSIX shell
 — all four verified against one shared [conformance suite](conformance/).
@@ -113,6 +113,39 @@ Full worked example: [`examples/quickstart/`](examples/quickstart/).
 
 ---
 
+## The seed layer — context-triggered re-expression
+
+Storing the diamond was never the bottleneck (git + memory files already persist it).
+The recurring failure is **context-blind recall**: the same insight re-derived every
+session because nothing surfaces it *at the moment it applies*. A **seed** fixes that —
+it's content plus **germination conditions** (`soil`, `antipatterns`, `provenance`), so
+it re-expresses when the context is right and stays dormant otherwise.
+
+```bash
+germinate seed --soil "marketplace,payments" --antipatterns "b2c" \
+   --title "Split-payment shape" --out _SEEDS/split-payment.md   # mint
+germinate sprout --context "building a marketplace with payments"  # surface what's ripe now
+```
+```
+SURFACED (1):
+  ✔ split-payment-shape [score 2] ← marketplace, payments
+```
+
+`sprout` is **deterministic by design**: literal `soil`/`tags` match, a **visible**
+antipattern veto (it prints *which* antipattern suppressed a seed — "receipts for
+silence"), and a `STALE` demotion when a seed's `soil` path has vanished from git. No
+NLP, no embeddings, no LLM — so every result is explainable and fixture-tested, and it
+**cannot hallucinate a match**. An empty result is a healthy "winter", not an error, and
+**dormant seeds are never garbage-collected** — dormancy is the feature (a seed carries
+potential energy until its soil returns).
+
+> **The germinate ↔ ARCS boundary is the moat, stated honestly.** germinate ships the
+> deterministic *socket* — mechanical, transparent, open. *Semantic* ripeness (judging
+> relevance beyond literal match, at the opportune moment) is a distinct, private
+> activation layer — the "vox animus". The open tool is honest and mechanical; the
+> intelligence is the layer above it. See [`docs/adjacencies.md`](docs/adjacencies.md)
+> and the seven-stage grammar in [`docs/grammar.md`](docs/grammar.md).
+
 ## Why polyglot, and how it stays honest
 
 The **real deliverable is language-neutral**: the [`SPEC.md`](SPEC.md), the JSON
@@ -127,6 +160,12 @@ applied to its own codebase.
 | **POSIX shell** | zero-dep CLI + git hooks (home of the serializability checks) | [`packages/shell`](packages/shell) |
 | **Python** | stdlib-only port | [`packages/python`](packages/python) |
 | **Rust** | signed single binary for the Homebrew bottle | [`packages/rust`](packages/rust) |
+
+The **spec + conformance suite is the deliverable**; the runtimes are proofs of it. Node
+is the reference implementation. The **substrate** primitives (belief-log, manifest,
+handoff, serializability) are conformant in all four runtimes; the **seed layer** ships
+conformant in **Node + Python** today (shell + Rust are tracked conformance targets — the
+fixtures already exist, the ports are welcome contributions).
 
 ---
 
