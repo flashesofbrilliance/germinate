@@ -81,6 +81,25 @@ the Observatory `--attribution hide` / strip-to-subject pattern generalized.
 rosetta private.* A future `belief append` lint (roadmap) should warn on likely-secret
 inline content and nudge toward an `evidence[]` handle.
 
+## The germinate ↔ ARCS boundary (why the moat survives open-sourcing)
+
+A seed carries **potential energy** — dormant, viable, waiting for favorable soil. What
+converts that potential to kinetic is an **activation spark**. That draws the product
+boundary:
+
+- **germinate (open-source, this repo)** = the **seed bank + the generic activation
+  contract**. It preserves dormant potential and surfaces mechanically (token/soil
+  match, antipattern suppression, dormancy-respecting). It is the substrate and the
+  spark's *socket*. Anyone gets this.
+- **ARCS (private)** = the **sparkplug / vox animus** — the richer activation
+  intelligence that judges *ripeness* beyond token overlap and revives a dormant seed at
+  the Kairos moment, using tailored priors and judgment. Not open-sourced.
+
+This is the same seam three times, unified: **public method / private rosetta** ·
+**portable discipline / tailored ARCS** · **dormant seed / animating spark**. germinate
+ships the socket; ARCS is the current that fires it — which is exactly why germinate is a
+clean public good that does not give away the moat.
+
 ## Roadmap — future verbs (extend the core, stay dependency-light)
 
 - **`drift-check --age` / staleness-distance.** Every surface carries a dated docset;
