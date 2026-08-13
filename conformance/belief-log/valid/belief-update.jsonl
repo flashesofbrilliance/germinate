@@ -1,0 +1,1 @@
+{"ts":"2026-08-13T14:00:00-04:00","trace":"demo","span":"1.1-path","kind":"belief.update","from":"The fastest path is A.","to":"Path B is faster given the new constraint.","trigger":"benchmark run","confidence":0.85,"evidence":["ci:run-4123"],"status":"ALIGNED"}

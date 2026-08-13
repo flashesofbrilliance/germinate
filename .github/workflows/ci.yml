@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  conformance:
+    name: conformance (all implementations)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Node tests
+        run: cd packages/node && node test/run.js
+
+      - name: Shell tests
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          sh packages/shell/test.sh
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Python tests
+        run: cd packages/python && python -m unittest discover -s tests
+
+      - name: Rust tests
+        run: cd packages/rust && cargo test
+
+  self-drift-check:
+    name: dogfood — drift-check this repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # Validate the conformance manifests parse + the belief-log fixtures validate.
+      - name: validate fixtures
+        run: |
+          node packages/node/bin/handoff-ledger.js belief validate conformance/belief-log/valid/belief-open.jsonl
+          node packages/node/bin/handoff-ledger.js drift-check --manifest conformance/manifest/all-in-sync.json

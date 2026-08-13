@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/flashesofbrilliance/handoff-ledger/spec/handoff.schema.json",
+  "title": "handoff-ledger handoff front-matter",
+  "description": "The YAML front-matter object of a SESSION-HANDOFF markdown file: coal->diamond seed with head (pickup) + tail (lineage).",
+  "type": "object",
+  "required": ["handoffVersion", "docset", "head"],
+  "additionalProperties": true,
+  "properties": {
+    "handoffVersion": { "type": "string" },
+    "title": { "type": "string" },
+    "docset": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[A-Za-z0-9]+\\.[0-9]+$"
+    },
+    "head": {
+      "type": "object",
+      "description": "Forward pickup pointers — where the NEXT session starts.",
+      "required": ["startsAt"],
+      "additionalProperties": true,
+      "properties": {
+        "startsAt": { "type": "string", "minLength": 1 },
+        "openThreads": { "type": "array", "items": { "type": "string" } },
+        "blocking": { "type": "string" }
+      }
+    },
+    "tail": {
+      "type": "object",
+      "description": "Provenance / lineage — how we got here.",
+      "additionalProperties": true,
+      "properties": {
+        "lastCommit": { "type": "string" },
+        "belieflog": { "type": "string" },
+        "manifest": { "type": "string" },
+        "supersedes": { "type": "string" }
+      }
+    }
+  }
+}

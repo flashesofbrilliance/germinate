@@ -1,0 +1,21 @@
+{
+  "name": "handoff-ledger",
+  "version": "0.1.0",
+  "description": "A serializable, provenance-carrying handoff protocol for multi-agent / multi-worktree development: append-only belief-log, drift-visible manifest, coal→diamond compaction, and a git-serializability check.",
+  "keywords": ["handoff", "provenance", "belief-log", "opentelemetry", "drift", "serializability", "agents", "multi-worktree", "compaction"],
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "handoff-ledger": "bin/handoff-ledger.js",
+    "hl": "bin/handoff-ledger.js"
+  },
+  "files": ["bin/", "src/", "README.md", "LICENSE"],
+  "scripts": {
+    "test": "node test/run.js",
+    "conformance": "node test/conformance.js"
+  },
+  "engines": { "node": ">=18" },
+  "repository": { "type": "git", "url": "git+https://github.com/flashesofbrilliance/handoff-ledger.git" },
+  "homepage": "https://github.com/flashesofbrilliance/handoff-ledger",
+  "dependencies": {}
+}

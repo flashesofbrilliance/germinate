@@ -1,0 +1,37 @@
+{
+  "description": "Language-neutral conformance suite. Every implementation (node, python, rust, shell) MUST reproduce these outcomes. Paths are relative to the conformance/ directory.",
+  "version": "0.1.0",
+  "beliefLogLineValidation": [
+    { "file": "belief-log/valid/trace-open.jsonl", "valid": true },
+    { "file": "belief-log/valid/belief-open.jsonl", "valid": true },
+    { "file": "belief-log/valid/belief-update.jsonl", "valid": true },
+    { "file": "belief-log/invalid/confidence-out-of-range.jsonl", "valid": false, "reason": "confidence > 1" },
+    { "file": "belief-log/invalid/missing-belief-on-open.jsonl", "valid": false, "reason": "belief.open requires belief" },
+    { "file": "belief-log/invalid/bad-kind.jsonl", "valid": false, "reason": "kind not in enum" },
+    { "file": "belief-log/invalid/missing-required.jsonl", "valid": false, "reason": "span is required" }
+  ],
+  "docsetOrdering": [
+    { "a": "2026-08-13-build.1", "b": "2026-08-13-build.2", "cmp": -1 },
+    { "a": "2026-08-13-build.2", "b": "2026-08-13-build.1", "cmp": 1 },
+    { "a": "2026-08-13-build.1", "b": "2026-08-13-build.1", "cmp": 0 },
+    { "a": "2026-08-12-postcall.9", "b": "2026-08-13-precall.1", "cmp": -1 },
+    { "a": "2026-08-13-build.10", "b": "2026-08-13-build.2", "cmp": 1 }
+  ],
+  "driftCheck": [
+    {
+      "manifest": "manifest/all-in-sync.json",
+      "expectExitZero": true,
+      "verdicts": { "S1": "IN_SYNC", "G1": "IN_SYNC" }
+    },
+    {
+      "manifest": "manifest/stale-projection.json",
+      "expectExitZero": false,
+      "verdicts": { "S1": "IN_SYNC", "G1": "STALE" }
+    },
+    {
+      "manifest": "manifest/out-of-sync-projection.json",
+      "expectExitZero": false,
+      "verdicts": { "S1": "IN_SYNC", "G1": "OUT_OF_SYNC" }
+    }
+  ]
+}

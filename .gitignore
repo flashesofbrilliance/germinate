@@ -1,0 +1,20 @@
+# Rust
+packages/rust/target/
+# Node
+node_modules/
+*.tgz
+# Python
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+*.egg-info/
+# OS / editor
+.DS_Store
+*.swp
+# local handoff-ledger working files (examples keep their own)
+/belieflog.jsonl
+/manifest.json
+/SESSION-HANDOFF.md
+/.handoff-ledger.json

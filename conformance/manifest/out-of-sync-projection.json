@@ -1,0 +1,8 @@
+{
+  "docsetVersion": "2026-08-13-build.2",
+  "canonicalBranch": "main",
+  "surfaces": [
+    { "id": "S1", "kind": "canonical", "path": "cases.json", "role": "SSOT", "docset": "2026-08-13-build.2" },
+    { "id": "G1", "kind": "projection", "ref": "gdoc:ABC", "source": ["S1"], "docset": "2026-08-13-build.2", "status": "OUT_OF_SYNC" }
+  ]
+}
