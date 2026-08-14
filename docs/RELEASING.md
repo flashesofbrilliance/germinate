@@ -15,10 +15,23 @@
 | npm publish + provenance | ✅ (`--provenance`, OIDC) | provide `NPM_TOKEN`, approve |
 | Homebrew formula bump | ⬜ (checksums produced) | update `homebrew/germinate.rb` / tap |
 
+## Publishing model — Trusted Publishing (OIDC, token-free)
+
+Since v0.1.1, releases use **npm Trusted Publishing**: no `NPM_TOKEN`, no stored secret.
+The `npm-publish` job authenticates via the workflow's OIDC identity and attaches
+provenance automatically. (v0.1.0 was a manual first publish — a token can't create a
+Trusted Publisher until the package exists.)
+
+**One-time npm setup (maintainer, on npmjs.com):**
+- Go to the **germinate** package → **Settings → Publishing access → Trusted Publisher**
+  → add a GitHub Actions publisher: organization/repo `flashesofbrilliance/germinate`,
+  workflow filename `release.yml`, environment `release`.
+- After that, you may **delete the `NPM_TOKEN`** environment secret — it's unused.
+
 ## One-time maintainer setup
 
-1. **npm:** create an automation token, add it as the `NPM_TOKEN` repo secret. (npm
-   provenance itself needs no key — it uses the workflow's OIDC identity.)
+1. ~~**npm:** create an automation token, add it as the `NPM_TOKEN` repo secret.~~
+   Superseded by Trusted Publishing (above) — no token needed.
 2. **Approval gate:** create a GitHub Environment named `release` with required
    reviewers = you. Both `npm-publish` and `github-release` jobs are gated on it, so
    nothing ships without your click.

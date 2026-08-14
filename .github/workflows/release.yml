@@ -70,22 +70,24 @@ jobs:
           generate_release_notes: true
 
   npm-publish:
-    # Independent of the Rust binary matrix — npm provenance needs only the workflow's
-    # OIDC identity, so a flaky cross-compile never blocks the primary (npm) artifact.
+    # Independent of the Rust binary matrix — so a flaky cross-compile never blocks
+    # the primary (npm) artifact.
     runs-on: ubuntu-latest
     environment: release        # <- same manual-approval gate
+    permissions:
+      id-token: write           # OIDC — required for Trusted Publishing + provenance
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
-      # First publish claims the name with the Automation token. `--provenance` is
-      # intentionally NOT used here: it 403s on a first publish (the package must exist
-      # before a trusted publisher / OIDC provenance can be configured). Post-first-publish,
-      # switch to npm Trusted Publishing (OIDC, no token) which attaches provenance
-      # automatically for every subsequent version. See docs/RELEASING.md.
-      - name: Publish to npm
-        run: cd packages/node && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted Publishing (OIDC): NO token. The npm package must have a Trusted
+      # Publisher configured on npmjs.com pointing at this repo + workflow + the
+      # `release` environment. npm >= 11.5 is required for OIDC trusted publishing,
+      # so upgrade the bundled npm first. Provenance is attached automatically.
+      - name: Upgrade npm (Trusted Publishing needs npm >= 11.5)
+        run: npm install -g npm@latest
+      - name: Publish to npm (Trusted Publishing / OIDC + provenance)
+        run: cd packages/node && npm publish --provenance --access public

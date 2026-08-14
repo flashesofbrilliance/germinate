@@ -1,8 +1,8 @@
 {
   "name": "germinate",
-  "version": "0.1.0",
-  "description": "A serializable, provenance-carrying handoff protocol for multi-agent / multi-worktree development: append-only belief-log, drift-visible manifest, coal→diamond compaction, and a git-serializability check.",
-  "keywords": ["handoff", "provenance", "belief-log", "opentelemetry", "drift", "serializability", "agents", "multi-worktree", "compaction"],
+  "version": "0.1.1",
+  "description": "Seed-bank + germination engine for agentic dev: mint durable seeds and surface the right one at the right moment (context-triggered re-expression) — plus an append-only belief-log, drift-visible manifest, coal→diamond handoff, and a git-serializability check. Zero deps.",
+  "keywords": ["seed-bank", "germination", "sprout", "handoff", "provenance", "belief-log", "opentelemetry", "drift", "serializability", "agents", "multi-worktree", "compaction", "context-triggered"],
   "license": "MIT",
   "type": "commonjs",
   "bin": {

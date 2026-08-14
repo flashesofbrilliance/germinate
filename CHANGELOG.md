@@ -3,7 +3,16 @@
 All notable changes to germinate. Format: [Keep a Changelog](https://keepachangelog.com);
 this project aims for [SemVer](https://semver.org).
 
-## [0.1.0] — unreleased
+## [0.1.1]
+
+- **npm description + keywords** rewritten to the seed-bank / germination framing
+  (0.1.0 shipped with the older "handoff protocol" description).
+- **Bundle README + LICENSE** in the published npm tarball (0.1.0 shipped without them).
+- **Release via npm Trusted Publishing (OIDC)** — token-free, provenance attached
+  automatically. Requires a Trusted Publisher configured on npmjs.com for this repo +
+  `release.yml` + the `release` environment. The `NPM_TOKEN` secret is no longer used.
+
+## [0.1.0] — published 2026-08-13
 
 Initial scaffold. Four primitives, four conformant implementations, distribution prepared.
 
