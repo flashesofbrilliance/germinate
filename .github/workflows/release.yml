@@ -70,7 +70,8 @@ jobs:
           generate_release_notes: true
 
   npm-publish:
-    needs: build-binaries
+    # Independent of the Rust binary matrix — npm provenance needs only the workflow's
+    # OIDC identity, so a flaky cross-compile never blocks the primary (npm) artifact.
     runs-on: ubuntu-latest
     environment: release        # <- same manual-approval gate
     steps:
