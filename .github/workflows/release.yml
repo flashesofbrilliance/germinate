@@ -80,7 +80,12 @@ jobs:
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
-      - name: Publish with provenance (OIDC-signed supply chain)
-        run: cd packages/node && npm publish --provenance --access public
+      # First publish claims the name with the Automation token. `--provenance` is
+      # intentionally NOT used here: it 403s on a first publish (the package must exist
+      # before a trusted publisher / OIDC provenance can be configured). Post-first-publish,
+      # switch to npm Trusted Publishing (OIDC, no token) which attaches provenance
+      # automatically for every subsequent version. See docs/RELEASING.md.
+      - name: Publish to npm
+        run: cd packages/node && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
