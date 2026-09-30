@@ -34,7 +34,7 @@ highest-leverage install and touches nothing but `.git/hooks` and one workflow f
 
 Every capability is exposed identically across surfaces. The **library is the SDK**;
 `--json` on every verb is the machine-composable pass-through; MCP is an optional
-thin wrapper. The conformance suite guarantees all four runtimes behave identically,
+thin wrapper. The shared conformance suite checks that all four runtimes behave identically on its cases,
 so this one table *is* the SDK reference.
 
 | Capability | CLI verb | Node fn | Python fn | Rust fn | `--json` out | File schema | (opt) MCP tool |
