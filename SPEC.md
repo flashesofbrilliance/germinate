@@ -128,7 +128,9 @@ Markdown projection MAY be rendered from it.
 ```
 
 - `id` MUST be unique within the manifest.
-- A `canonical` surface MUST have a `path` (git-tracked).
+- A `canonical` surface MUST have a `path` (git-tracked). A relative `path` MUST be
+  resolved against the directory containing the manifest file, not the process's
+  working directory, so the same manifest gives the same verdicts wherever it is run.
 - A `projection` MUST have a `ref` (an opaque out-of-band handle) and SHOULD have
   a `source` array of canonical `id`s it is rendered from.
 - Every surface MUST carry a `docset` string.
@@ -139,8 +141,8 @@ For each surface `s` in the manifest:
 
 1. If `version(s.docset) < version(manifest.docsetVersion)` → **STALE**.
 2. Else if `s.kind == "projection"` and `s.status != "IN_SYNC"` → **OUT_OF_SYNC**.
-3. Else if `s.kind == "canonical"` and `s.path` does not exist in the working
-   tree → **MISSING**.
+3. Else if `s.kind == "canonical"` and `s.path`, resolved against the manifest's
+   directory (§3), does not exist → **MISSING**.
 4. Else → **IN_SYNC**.
 
 `drift-check` MUST exit non-zero if any surface is STALE, OUT_OF_SYNC, or MISSING,
