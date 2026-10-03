@@ -42,7 +42,8 @@ fn drift() {
     for case in c.get("driftCheck").unwrap().as_arr().unwrap() {
         let mpath = case.get("manifest").unwrap().as_str().unwrap();
         let manifest = germinate::json::parse(&read(mpath)).unwrap();
-        let (verdicts, ok) = drift_check(&manifest, &conf_dir()).unwrap();
+        let base = conf_dir().join(mpath);
+        let (verdicts, ok) = drift_check(&manifest, base.parent().unwrap()).unwrap();
         let want_ok = matches!(case.get("expectExitZero"), Some(germinate::json::Value::Bool(true)));
         assert_eq!(ok, want_ok, "{}", mpath);
         if let Some(germinate::json::Value::Obj(vs)) = case.get("verdicts") {

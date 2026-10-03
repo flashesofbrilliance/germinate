@@ -30,7 +30,7 @@ for (const c of cases.docsetOrdering) {
 // 3. drift-check
 for (const c of cases.driftCheck) {
   const m = loadManifest(path.join(CONF, c.manifest));
-  const { verdicts, ok } = driftCheck(m, CONF);
+  const { verdicts, ok } = driftCheck(m, path.dirname(path.join(CONF, c.manifest)));
   log(ok === c.expectExitZero, `drift ${c.manifest} expected ok=${c.expectExitZero} got ${ok}`);
   for (const [id, v] of Object.entries(c.verdicts)) {
     log(verdicts[id] === v, `drift ${c.manifest} surface ${id} expected ${v} got ${verdicts[id]}`);

@@ -29,7 +29,7 @@ class Conformance(unittest.TestCase):
     def test_drift_check(self):
         for c in CASES["driftCheck"]:
             m = load_manifest(os.path.join(CONF, c["manifest"]))
-            verdicts, ok = drift_check(m, CONF)
+            verdicts, ok = drift_check(m, os.path.dirname(os.path.join(CONF, c["manifest"])))
             self.assertEqual(ok, c["expectExitZero"], c["manifest"])
             for i, v in c["verdicts"].items():
                 self.assertEqual(verdicts[i], v, (c["manifest"], i))
